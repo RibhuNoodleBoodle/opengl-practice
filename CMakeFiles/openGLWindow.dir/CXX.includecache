@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ribhu/OpenGL/src/glfwtest.cpp
+GL/glew.h
+-
+GLFW/glfw3.h
+-
+iostream
+-
+

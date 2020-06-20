@@ -1,0 +1,1 @@
+/usr/bin/c++   -Wall -Werror -std=c++14 -g   CMakeFiles/openGLWindow.dir/src/glfwtest.cpp.o  -o openGLWindow 
