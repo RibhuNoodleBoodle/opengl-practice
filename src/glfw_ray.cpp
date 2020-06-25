@@ -132,14 +132,8 @@ int main(void)
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
-
-        glUniform4f(location, r, 1.0f, 0.8f, 0.2f);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
-        if(r>1.0f)
-            interval=-0.05f;
-        if(r<0.0f)
-            interval=0.05f;
-        r+=interval;
+        
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 

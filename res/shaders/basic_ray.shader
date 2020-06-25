@@ -1,24 +1,18 @@
 #shader vertex
-#version 330 core
+#version 450 core
+      
 
-layout (location = 0) in vec3 aPos;   // the position variable has attribute position 0
-layout (location = 1) in vec3 aColor; // the color variable has attribute position 1
-  
-out vec3 ourColor; // output a color to the fragment shader
-
-void main()
-{
-    gl_Position = vec4(aPos, 1.0);
-    ourColor = aColor; // set ourColor to the input color we got from the vertex data
-}       
 
 #shader fragment
-#version 330 core
+#version 450 core
 
 #define MAX_STEPS 100
 #define MAX_DIST 100.
 #define SURF_DIST .01
 
+out vec4 fragColor; in vec2 fragCoord;
+uniform float time;
+uniform vec3 iResolution;
 float GetDist(vec3 p) {
 	vec4 s = vec4(0, 1, 6, 1);
     
@@ -56,7 +50,7 @@ vec3 GetNormal(vec3 p) {
 
 float GetLight(vec3 p) {
     vec3 lightPos = vec3(0, 5, 6);
-    lightPos.xz += vec2(sin(iTime), cos(iTime))*2.;
+    lightPos.xz += vec2(sin(time), cos(time))*2.;
     vec3 l = normalize(lightPos-p);
     vec3 n = GetNormal(p);
     
@@ -67,8 +61,9 @@ float GetLight(vec3 p) {
     return dif;
 }
 
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
+void main()
 {
+    
     vec2 uv = (fragCoord-.5*iResolution.xy)/iResolution.y;
 
     vec3 col = vec3(0);
