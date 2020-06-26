@@ -1,3 +1,0 @@
-/home/ribhu/OpenGL/CMakeFiles/rebuild_cache.dir
-/home/ribhu/OpenGL/CMakeFiles/edit_cache.dir
-/home/ribhu/OpenGL/CMakeFiles/openGLWindow.dir
