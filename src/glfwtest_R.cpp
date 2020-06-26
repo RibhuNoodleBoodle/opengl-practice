@@ -3,25 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#define ASSERT(x) if (!(x)) raise(SIGTRAP);
-#define GLCall(x) GLClearError();\
-    x;\
-    ASSERT(GLLogCall(#x, __FILE__, __LINE__));
-
-static void GLClearError()
-{
-    while(!glGetError());
-}
-
-static bool GLLogCall(const char* function, const char* file, int line)
-{
-    while(GLenum error= glGetError())
-    {
-        std::cout<<"[OpenGL Error] ("<<error<<")"<<function<<" "<<file<<"):"<<line<<std::endl;
-        return false;
-    }
-    return true;
-}
+#include "Renderer.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 struct ShaderProgramSource
 {
     std::string VertexSource;
@@ -121,23 +105,21 @@ int main(void)
         -0.5f, 0.5f,
     };
 
-    unsigned short indices[]={
+    unsigned int indices[]={
         0, 1, 2,
         2, 3, 0
     };
 
-    unsigned int buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+    unsigned int vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
-    unsigned int ibo;
-    glGenBuffers(1, &ibo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
+    VertexBuffer vb(positions, 4*2*sizeof(float));
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float)*2, 0);
+    IndexBuffer ib(indices, 6);
+
+    
     ShaderProgramSource source=ParseShader("res/shaders/basic.shader");
     unsigned int shader=CreateShader(source.VertexSource, source.FragmentSource);
     glUseProgram(shader);
@@ -146,6 +128,7 @@ int main(void)
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
+        ib.Bind();
         
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
         

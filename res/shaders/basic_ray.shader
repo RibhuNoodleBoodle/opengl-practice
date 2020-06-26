@@ -1,6 +1,16 @@
 #shader vertex
 #version 450 core
-      
+
+layout(location = 0)in vec4 vert;
+
+uniform mat4 projection;
+uniform mat4 view;
+uniform mat4 model;
+
+void main()
+{
+    gl_Position = projection * view * model * vert;
+}
 
 
 #shader fragment
@@ -10,7 +20,7 @@
 #define MAX_DIST 100.
 #define SURF_DIST .01
 
-out vec4 fragColor; in vec2 fragCoord;
+out vec4 fragColor; in vec2 FragCoord;
 uniform float time;
 uniform vec3 iResolution;
 float GetDist(vec3 p) {
@@ -64,7 +74,7 @@ float GetLight(vec3 p) {
 void main()
 {
     
-    vec2 uv = (fragCoord-.5*iResolution.xy)/iResolution.y;
+    vec2 uv = (FragCoord-.5*iResolution.xy)/iResolution.y;
 
     vec3 col = vec3(0);
     
@@ -77,7 +87,5 @@ void main()
     
     float dif = GetLight(p);
     col = vec3(dif);
-    
-    
     fragColor = vec4(col,1.0);
 }

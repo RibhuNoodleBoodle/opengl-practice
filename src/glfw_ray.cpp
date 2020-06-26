@@ -72,7 +72,30 @@ static unsigned int CreateShader(const std::string& vertexShader, const std::str
     glDeleteShader(fs);
     return program; 
 }
-
+static unsigned int ShaderLinkCheck(const std::string& vertexShader, const std::string& fragmentShader)
+{
+    GLuint program = glCreateProgram();
+    unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+    unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+    glAttachShader(program, vs);
+    glAttachShader(program, fs);
+    glLinkProgram(program);
+    GLint isLinked = 0;
+    glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
+    if (isLinked == GL_FALSE)
+    {
+	    GLint maxLength = 0;
+	    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
+	    char* message= (char*)alloca(maxLength*sizeof(char));
+	    glGetProgramInfoLog(program, maxLength, &maxLength, message);
+	    // The program is useless now. So delete it.
+	    glDeleteProgram(program);
+	    // Provide the infolog in whatever manner you deem best.
+	    // Exit with failure.
+	    return 0;
+    }
+    return program;
+}
 int main(void)
 {
     GLFWwindow* window;
@@ -80,7 +103,7 @@ int main(void)
     /* Initialize the library */
     if (!glfwInit())
         return -1;
-
+    
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
     if (!window)
@@ -94,7 +117,12 @@ int main(void)
 
     if(glewInit()!=GLEW_OK)
         std::cout<<"error"<<std::endl;
-    
+
+    unsigned int vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+
     float positions[]={
         -0.5f, -0.5f,
         0.5f, -0.5f,
@@ -102,7 +130,7 @@ int main(void)
         -0.5f, 0.5f,
     };
 
-    unsigned short indices[]={
+    unsigned int indices[]={
         0, 1, 2,
         2, 3, 0
     }; 
@@ -117,16 +145,21 @@ int main(void)
     unsigned int ibo;
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6*sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 
     ShaderProgramSource source=ParseShader("res/shaders/basic_ray.shader");
     unsigned int shader=CreateShader(source.VertexSource, source.FragmentSource);
+    unsigned int shaderc=ShaderLinkCheck(source.VertexSource, source.FragmentSource);
+    if(shaderc==0)
+    {
+        std::cout<<"Shading Link failed";
+    }
     glUseProgram(shader);
-    unsigned int location = glGetUniformLocation(shader, "u_Color");
-    glUniform4f(location, 0.7f, 1.0f, 0.8f, 0.2f);
-    float r;
-    float interval=0.05f;
+    unsigned int timing = glGetUniformLocation(shader, "time");
+    float time=0.001;
+    GLint loc = glGetUniformLocation(shader, "iResolution");
+    
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -134,6 +167,8 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
         
+        glUniform1f(timing,time*2);
+        glUniform2f(loc, 640, 480);
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
