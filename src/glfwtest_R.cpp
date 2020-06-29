@@ -3,9 +3,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "Renderer.h"
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "Renderer.h"
 struct ShaderProgramSource
 {
     std::string VertexSource;
@@ -85,6 +85,7 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);  
     window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
     if (!window)
     {
@@ -104,7 +105,8 @@ int main(void)
         0.5f, 0.5f,
         -0.5f, 0.5f,
     };
-
+std::cout<<glGetString(GL_VERSION)<<std::endl;
+{
     unsigned int indices[]={
         0, 1, 2,
         2, 3, 0
@@ -139,10 +141,10 @@ int main(void)
         r+=interval;
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
-
         /* Poll for and process events */
         glfwPollEvents();
     }
+}
 
     glfwTerminate();
     return 0;

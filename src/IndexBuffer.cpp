@@ -1,6 +1,7 @@
 #include "IndexBuffer.h"
 #include "Renderer.h"
-
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
     :m_Count(count)
 {
@@ -11,14 +12,14 @@ IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
 }
 IndexBuffer::~IndexBuffer()
 {
-    GLCall(glDeleteBuffers(1, &m_RendererID));
+    glDeleteBuffers(1, &m_RendererID);
 }
 
 void IndexBuffer::Bind() const
 {
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 }
 void IndexBuffer::UnBind() const
 {
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
