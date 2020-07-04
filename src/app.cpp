@@ -6,6 +6,8 @@
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 #include "Renderer.h"
+#include "VertexArray.h"
+#include "VertexBufferLayout.h"
 struct ShaderProgramSource
 {
     std::string VertexSource;
@@ -111,11 +113,11 @@ std::cout<<glGetString(GL_VERSION)<<std::endl;
         0, 1, 2,
         2, 3, 0
     }; 
+    VertexArray va;
     VertexBuffer vb(positions, sizeof(positions));
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float)*2, 0);
-
+    VertexBufferLayout layout;
+    layout.Push<float>(2);
+    va.AddBuffer(vb,layout);
     IndexBuffer ib(indices, 6);
 
     ShaderProgramSource source=ParseShader("res/shaders/basic_c.shader");
@@ -132,6 +134,7 @@ std::cout<<glGetString(GL_VERSION)<<std::endl;
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUniform4f(location, r, 1.0f, 0.8f, 0.2f);
+        va.Bind();
         ib.Bind();
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         if(r>1.0f)
@@ -144,6 +147,7 @@ std::cout<<glGetString(GL_VERSION)<<std::endl;
         /* Poll for and process events */
         glfwPollEvents();
     }
+    glDeleteProgram(shader);
 }
 
     glfwTerminate();
