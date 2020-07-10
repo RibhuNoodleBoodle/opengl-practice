@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1594098254 source:/home/ribhu/opengl-practice/main.cpp
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<iostream>
+	<fstream>
+	<sstream>
+

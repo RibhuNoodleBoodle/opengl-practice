@@ -18,14 +18,14 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 {
     Bind();
     vb.Bind();
-    const auto& elements =layout.GetElements();
+    const auto& elements =layout.get_elements();
     unsigned long offset =0;
     for (unsigned int i = 0; i < elements.size(); i++)
     {
         const auto& element = elements[i];
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.GetStride(), (const GLvoid*)offset);
-        offset+=element.count*VertexBufferElement::GetSizeOfType(element.type);
+        glVertexAttribPointer(i, element.count, element.type, element.normalized, layout.get_stride(), (const GLvoid*)offset);
+        offset+=element.count*VertexBufferElement::get_size_of_type(element.type);
     }    
 }
 
