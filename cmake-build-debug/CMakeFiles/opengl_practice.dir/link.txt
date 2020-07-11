@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/opengl_practice.dir/src/glfwtest_R_mc.cpp.o CMakeFiles/opengl_practice.dir/main.cpp.o  -o opengl_practice 
