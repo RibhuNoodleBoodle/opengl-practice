@@ -59,18 +59,18 @@ std::cout<<glGetString(GL_VERSION)<<std::endl;
     vb.UnBind();
     ib.UnBind();
     shader.Unbind();
+
+    Renderer renderer;
     float r;
     float interval=0.05f;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        renderer.Clear();
         shader.Bind();
         shader.SetUniform4f("u_Color", r, 1.0f, 0.8f, 0.2f);
-        va.Bind();
-        ib.Bind();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        renderer.Draw(va, ib, shader);
         if(r>1.0f)
             interval=-0.05f;
         if(r<0.0f)
