@@ -9,7 +9,7 @@
 #include "Renderer.h"
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
-
+#include "Texture.h"
 int main(void)
 {
     GLFWwindow* window;
@@ -34,10 +34,10 @@ int main(void)
         std::cout<<"error"<<std::endl;
     
     float positions[]={
-        -0.5f, -0.5f,
-        0.5f, -0.5f,
-        0.5f, 0.5f,
-        -0.5f, 0.5f,
+        -0.5f, -0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, 0.0f, 1.0f
     };
 std::cout<<glGetString(GL_VERSION)<<std::endl;
 {
@@ -49,11 +49,15 @@ std::cout<<glGetString(GL_VERSION)<<std::endl;
     VertexBuffer vb(positions, sizeof(positions));
     VertexBufferLayout layout;
     layout.Push<float>(2);
+    layout.Push<float>(2);
     va.AddBuffer(vb,layout);
     IndexBuffer ib(indices, 6);
-    Shader shader("res/shaders/basic_c.shader");
+    Shader shader("res/shaders/basic_c_tex.shader");
     shader.Bind();
     shader.SetUniform4f("u_Color", 0.7f, 1.0f, 0.8f, 0.2f);
+    Texture texture("res/textures/ChernoLogo.png");
+    texture.Bind();
+    shader.SetUniform1i("u_Texture", 0);
 
     va.UnBind();
     vb.UnBind();
