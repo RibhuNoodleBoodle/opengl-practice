@@ -52,13 +52,12 @@ std::cout<<glGetString(GL_VERSION)<<std::endl;
     layout.Push<float>(2);
     va.AddBuffer(vb,layout);
     IndexBuffer ib(indices, 6);
-    Shader shader("res/shaders/basic_c_tex.shader");
+    Shader shader("res/shaders/basic_c.shader");
     shader.Bind();
     shader.SetUniform4f("u_Color", 0.7f, 1.0f, 0.8f, 0.2f);
     Texture texture("res/textures/ChernoLogo.png");
-    texture.Bind();
+    texture.Bind(0);
     shader.SetUniform1i("u_Texture", 0);
-
     va.UnBind();
     vb.UnBind();
     ib.UnBind();
@@ -72,14 +71,8 @@ std::cout<<glGetString(GL_VERSION)<<std::endl;
     {
         /* Render here */
         renderer.Clear();
-        shader.Bind();
-        shader.SetUniform4f("u_Color", r, 1.0f, 0.8f, 0.2f);
+        
         renderer.Draw(va, ib, shader);
-        if(r>1.0f)
-            interval=-0.05f;
-        if(r<0.0f)
-            interval=0.05f;
-        r+=interval;
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
         /* Poll for and process events */

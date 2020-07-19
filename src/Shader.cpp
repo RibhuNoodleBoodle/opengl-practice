@@ -9,7 +9,7 @@
 Shader::Shader(const std::string& filepath)
     : m_FilePath(filepath), m_RendererID(0)
 {
-    ShaderProgramSource source=ParseShader("res/shaders/basic_c.shader");
+    ShaderProgramSource source=ParseShader(filepath);
     m_RendererID=CreateShader(source.VertexSource, source.FragmentSource);
 }
 
@@ -109,11 +109,17 @@ void Shader::SetUniform1f(const std::string& name, float value)
 int Shader::GetUniformLocation(const std::string& name)
 {
     if(m_UniformLocationCache.find(name)!=m_UniformLocationCache.end())
+    {
         return m_UniformLocationCache[name];
-    int location=glGetUniformLocation(m_RendererID,name.c_str());
+    }
+    int location=glGetUniformLocation(m_RendererID, name.c_str());
     if(location == -1)
     {
-        std::cout<<"Writing uniform doesn't exist"<<std::endl;
+        std::cout<<"Writing uniform "<<name<<" doesn't exist"<<std::endl;
+    }
+    else
+    {
+        m_UniformLocationCache[name]=location;
     }
     return location;
 }
