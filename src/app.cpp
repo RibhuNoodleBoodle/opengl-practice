@@ -45,6 +45,8 @@ std::cout<<glGetString(GL_VERSION)<<std::endl;
         0, 1, 2,
         2, 3, 0
     }; 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     VertexArray va;
     VertexBuffer vb(positions, sizeof(positions));
     VertexBufferLayout layout;
@@ -52,10 +54,10 @@ std::cout<<glGetString(GL_VERSION)<<std::endl;
     layout.Push<float>(2);
     va.AddBuffer(vb,layout);
     IndexBuffer ib(indices, 6);
-    Shader shader("res/shaders/basic_c.shader");
+    Shader shader("res/shaders/basic_tex.shader");
     shader.Bind();
     shader.SetUniform4f("u_Color", 0.7f, 1.0f, 0.8f, 0.2f);
-    Texture texture("res/textures/ChernoLogo.png");
+    Texture texture("res/textures/wall.jpg");
     texture.Bind(0);
     shader.SetUniform1i("u_Texture", 0);
     va.UnBind();
@@ -71,7 +73,6 @@ std::cout<<glGetString(GL_VERSION)<<std::endl;
     {
         /* Render here */
         renderer.Clear();
-        
         renderer.Draw(va, ib, shader);
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
